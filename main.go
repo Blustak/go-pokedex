@@ -13,6 +13,7 @@ type cliCommand struct {
 	callback func() error
 }
 
+
 var registry map[string]cliCommand
 
 func main() {
