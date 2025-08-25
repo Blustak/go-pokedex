@@ -37,9 +37,20 @@ func (l LocationAreaExploreRequest) GetFullUrl() string {
     return fmt.Sprintf("%s/location-area/%s", baseUrl, l.Name)
 }
 
+type PokemonRequest struct {
+    Name string
+}
+
+func (p PokemonRequest) GetFullUrl() string {
+    return fmt.Sprintf("%s/pokemon/%s", baseUrl, p.Name)
+}
+
 func Get(req PokeApiRequest, cache *pokecache.Pokecache) ([]byte, error) {
 	fullUrl := req.GetFullUrl()
 	if cacheRes, ok := cache.Get(fullUrl); ok {
+        if cacheRes == nil {
+            return nil, fmt.Errorf("error resource does not exist")
+        }
 		return cacheRes, nil
 	}
 
@@ -47,6 +58,9 @@ func Get(req PokeApiRequest, cache *pokecache.Pokecache) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error fetching response: %w", err)
 	}
+    if res.StatusCode == 404 {
+        cache.Add(fullUrl, nil) 
+    }
 	if res.StatusCode > 299 {
 		return nil, fmt.Errorf("error bad status code %s", res.Status)
 	}

@@ -21,6 +21,10 @@ func TestCacheAddGet(t *testing.T) {
             key: "file://funny.cache/root/system32",
             val: []byte("{more test data}"),
         },
+        {
+            key: "https://foo.bar/nil",
+            val: nil,
+        },
     }
 
     for i, c := range cases {
