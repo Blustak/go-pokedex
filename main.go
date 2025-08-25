@@ -75,6 +75,12 @@ func main() {
         callback: commandInspect,
     }
 
+    registry["pokedex"] = cliCommand{
+        name: "pokedex",
+        desc: "list the pokemon you have caught",
+        callback: commandPokedex,
+    }
+
 	reader := bufio.NewReader(os.Stdin)
 	scanner := bufio.NewScanner(reader)
 	for {
@@ -227,5 +233,17 @@ func commandInspect(c *config.Config) error {
         return nil
     }
     poke.Print()
+    return nil
+}
+
+func commandPokedex(c *config.Config) error {
+    if len(caughtPokemon) == 0 {
+        fmt.Println("You have not caught any pokemon!")
+        return nil
+    }
+    fmt.Println("Your Pokedex:")
+    for k, _ := range caughtPokemon {
+        fmt.Printf("  - %s\n", k)
+    }
     return nil
 }
